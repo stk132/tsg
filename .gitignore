@@ -1,0 +1,4 @@
+vendor
+*~
+const_tables.go
+tsg

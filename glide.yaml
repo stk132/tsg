@@ -1,0 +1,6 @@
+package: github.com/stk132/tsg
+import:
+- package: github.com/gocraft/dbr
+- package: github.com/lib/pq
+- package: gopkg.in/flosch/pongo2.v3
+- package: github.com/serenize/snaker
