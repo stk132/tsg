@@ -8,7 +8,6 @@ import (
 	_ "github.com/lib/pq"
 	_ "github.com/serenize/snaker"
 	"github.com/stk132/tsg/loader"
-	"github.com/stk132/tsg/model"
 	"github.com/stk132/tsg/template"
 )
 
@@ -26,14 +25,27 @@ func main() {
 		return
 	}
 
-	tableNames, err := l.TableNames(sess)
+	tables, err := l.Load(sess)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
+	// tableNames, err := l.TableNames(sess)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	//
 	tpl := template.NewTpl()
-	tables := model.NewTables(tableNames)
+	// elements := make([]*model.Elem, len(tableNames))
+	// for i, v := range tableNames {
+	// 	elements[i] = &model.Elem{
+	// 		TableName:   v,
+	// 		ColumnNames: []string{"hoge_fuga", "foo_bar"},
+	// 	}
+	// }
+	// tables := model.NewTables(elements)
 	out, err := tpl.Gen(tables)
 	if err != nil {
 		fmt.Println(err)
@@ -44,8 +56,5 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Println(out)
-	fmt.Println(tableNames)
 
 }

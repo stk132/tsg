@@ -1,4 +1,5 @@
 vendor
 *~
 const_tables.go
+const_tables_test.go
 tsg

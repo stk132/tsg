@@ -15,6 +15,60 @@ const (
 )
 `
 
+const tplString2 = `
+package main
+
+import "fmt"
+
+var (
+  {% for table in tables %}
+  V{{table.Capital}} {{table.Capital}}
+  {% endfor %}
+)
+
+func init() {
+  {% for table in tables %}
+  V{{table.Capital}} = {{table.Capital}}{
+    original: "{{table.Original}}",
+    {% for column in table.Columns %}
+    {{column.Capital}}: Column{name: "{{column.Original}}"},
+    {% endfor %}
+  }
+  {% endfor %}
+}
+
+type Column struct {
+  name string
+}
+
+func (c Column) N() string {
+  return c.name
+}
+
+{% for table in tables %}
+
+type {{table.Capital}} struct {
+  original string
+  {% for column in table.Columns %}
+  {{column.Capital}} Column
+  {% endfor %}
+}
+
+func (t {{table.Capital}} ) N() string {
+  return t.original
+}
+
+func (t {{table.Capital}}) A(aliasName string) {{table.Capital}} {
+  return {{table.Capital}}{
+    original: aliasName,
+    {% for column in table.Columns %}
+    {{column.Capital}}: Column{name: fmt.Sprintf("%s.%s", aliasName, "{{column.Original}}")},
+    {% endfor %}
+  }
+}
+{% endfor %}
+`
+
 //Tpl template implements
 type Tpl struct {
 	tableTpl *pongo2.Template
@@ -22,7 +76,7 @@ type Tpl struct {
 
 //NewTpl constructor for Tpl
 func NewTpl() *Tpl {
-	tpl, _ := pongo2.FromString(tplString)
+	tpl, _ := pongo2.FromString(tplString2)
 	return &Tpl{tableTpl: tpl}
 }
 
