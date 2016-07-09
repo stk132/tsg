@@ -54,6 +54,10 @@ func main() {
 		errHandle(err)
 	}
 
+	if err = os.MkdirAll(*dir, os.ModeDir|0755); err != nil {
+		errHandle(err)
+	}
+
 	fileName := fmt.Sprintf("%s/%s", *dir, *output)
 	if err = ioutil.WriteFile(fileName, []byte(out), 0660); err != nil {
 		errHandle(err)
