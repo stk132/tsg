@@ -16,7 +16,7 @@ const (
 `
 
 const tplString2 = `
-package main
+package {{package}}
 
 import "fmt"
 
@@ -81,6 +81,6 @@ func NewTpl() *Tpl {
 }
 
 //Gen generate from template
-func (t *Tpl) Gen(tableNames []*model.Table) (string, error) {
-	return t.tableTpl.Execute(pongo2.Context{"tables": tableNames})
+func (t *Tpl) Gen(tableNames []*model.Table, packageName string) (string, error) {
+	return t.tableTpl.Execute(pongo2.Context{"tables": tableNames, "package": packageName})
 }

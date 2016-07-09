@@ -3,58 +3,60 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/gocraft/dbr"
 	_ "github.com/lib/pq"
-	_ "github.com/serenize/snaker"
 	"github.com/stk132/tsg/loader"
 	"github.com/stk132/tsg/template"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+var (
+	user     = kingpin.Flag("user", "database user").Short('u').Required().String()
+	pass     = kingpin.Flag("pass", "password").Required().String()
+	host     = kingpin.Flag("host", "database host").Default("localhost").Short('h').String()
+	port     = kingpin.Flag("port", "database port").Default("5432").Short('p').String()
+	database = kingpin.Flag("database", "database name").Short('d').Required().String()
+
+	dir         = kingpin.Flag("output-dir", "generate file output dir").Default(".").String()
+	output      = kingpin.Flag("output-filename", "generated filename").Default("const_tables.go").String()
+	packageName = kingpin.Flag("package-name", "generated file's pacakge name").Default("main").String()
+)
+
+func errHandle(err error) {
+	fmt.Fprintln(os.Stderr, err)
+	os.Exit(1)
+}
+
 func main() {
-	conn, err := dbr.Open("postgres", "postgres://stk132:postgres@localhost:5432/mydb?sslmode=disable", nil)
+	kingpin.Parse()
+	connectStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", *user, *pass, *host, *port, *database)
+	conn, err := dbr.Open("postgres", connectStr, nil)
 	if err != nil {
-		fmt.Println(err)
-		return
+		errHandle(err)
 	}
 
 	sess := conn.NewSession(nil)
 	l, err := loader.NewLoader(loader.TypePostgres)
 	if err != nil {
-		fmt.Println(err)
-		return
+		errHandle(err)
 	}
 
 	tables, err := l.Load(sess)
 	if err != nil {
-		fmt.Println(err)
-		return
+		errHandle(err)
 	}
 
-	// tableNames, err := l.TableNames(sess)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	//
 	tpl := template.NewTpl()
-	// elements := make([]*model.Elem, len(tableNames))
-	// for i, v := range tableNames {
-	// 	elements[i] = &model.Elem{
-	// 		TableName:   v,
-	// 		ColumnNames: []string{"hoge_fuga", "foo_bar"},
-	// 	}
-	// }
-	// tables := model.NewTables(elements)
-	out, err := tpl.Gen(tables)
+	out, err := tpl.Gen(tables, *packageName)
 	if err != nil {
-		fmt.Println(err)
-		return
+		errHandle(err)
 	}
 
-	if err = ioutil.WriteFile("const_tables.go", []byte(out), 0660); err != nil {
-		fmt.Println(err)
-		return
+	fileName := fmt.Sprintf("%s/%s", *dir, *output)
+	if err = ioutil.WriteFile(fileName, []byte(out), 0660); err != nil {
+		errHandle(err)
 	}
 
 }

@@ -1,6 +1,12 @@
-hash: 0119b139bb0b6eb6cfca287564f7c8f10da26035969734f7ceb60ad57c417168
-updated: 2016-07-09T04:37:38.634220975+09:00
+hash: cb01a961447028a95c2945914a0fe468fba266e39ba2cf64bced8387d3979f75
+updated: 2016-07-09T20:48:14.164704395+09:00
 imports:
+- name: github.com/alecthomas/template
+  version: a0175ee3bccc567396460bf5acd36800cb10c49c
+  subpackages:
+  - parse
+- name: github.com/alecthomas/units
+  version: 2efee857e7cfd4f3d0138cc3cbb1b4966962b93a
 - name: github.com/gocraft/dbr
   version: 78b5b74da0b8bcbe167cc4c55d3383b6893848c3
   subpackages:
@@ -11,6 +17,8 @@ imports:
   - oid
 - name: github.com/serenize/snaker
   version: 8824b61eca66d308fcb2d515287d3d7a28dba8d6
+- name: gopkg.in/alecthomas/kingpin.v2
+  version: 8cccfa8eb2e3183254457fb1749b2667fbc364c7
 - name: gopkg.in/flosch/pongo2.v3
   version: 5e81b817a0c48c1c57cdf1a9056cf76bdee02ca9
 devImports: []
