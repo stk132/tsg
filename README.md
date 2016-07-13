@@ -23,7 +23,8 @@ package main
 import "fmt"
 
 var (
-	VUsers Users
+  //VUsers global variable for getting table, column name
+  VUsers Users
 )
 
 func init() {
@@ -38,14 +39,22 @@ func init() {
 
 }
 
+//Column struct that represents table column
 type Column struct {
 	name string
 }
 
+//N return column name
 func (c Column) N() string {
 	return c.name
 }
 
+//As return aliasName like "columnName AS aliasName"
+func (c Column) As(aliasName string) string {
+	return fmt.Sprintf("%s AS %s", c.N(), aliasName)
+}
+
+//Users struct that represents table "users"
 type Users struct {
 	original string
 
@@ -54,10 +63,12 @@ type Users struct {
 	Name Column
 }
 
+//N return table name
 func (t Users) N() string {
 	return t.original
 }
 
+//A return struct that has aliasName specified
 func (t Users) A(aliasName string) Users {
 	return Users{
 		original: aliasName,
