@@ -48,6 +48,11 @@ func (c Column) N() string {
   return c.name
 }
 
+//As return aliasName like "columnName AS aliasName"
+func (c Column) As(aliasName string) string {
+	return fmt.Sprintf("%s AS %s", c.N(), aliasName)
+}
+
 {% for table in tables %}
 //{{table.Capital}} struct that represents table "{{table.Original}}"
 type {{table.Capital}} struct {
