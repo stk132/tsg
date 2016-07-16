@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/gocraft/dbr"
 	_ "github.com/lib/pq"
 	"github.com/stk132/tsg/loader"
 	"github.com/stk132/tsg/template"
@@ -13,12 +12,12 @@ import (
 )
 
 var (
-	user     = kingpin.Flag("user", "database user").Short('u').Required().String()
-	pass     = kingpin.Flag("pass", "password").Required().String()
-	host     = kingpin.Flag("host", "database host").Default("localhost").Short('h').String()
-	port     = kingpin.Flag("port", "database port").Default("5432").Short('p').String()
-	database = kingpin.Flag("database", "database name").Short('d').Required().String()
-
+	user        = kingpin.Flag("user", "database user").Short('u').Required().String()
+	pass        = kingpin.Flag("pass", "password").Required().String()
+	host        = kingpin.Flag("host", "database host").Default("localhost").Short('h').String()
+	port        = kingpin.Flag("port", "database port").Default("5432").Short('p').String()
+	database    = kingpin.Flag("database", "database name").Short('d').Required().String()
+	dbtype      = kingpin.Flag("dbtype", "database type").Default("Postgres").String()
 	dir         = kingpin.Flag("output-dir", "generate file output dir").Default(".").String()
 	output      = kingpin.Flag("output-filename", "generated filename").Default("const_tables.go").String()
 	packageName = kingpin.Flag("package-name", "generated file's pacakge name").Default("main").String()
@@ -31,19 +30,13 @@ func errHandle(err error) {
 
 func main() {
 	kingpin.Parse()
-	connectStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", *user, *pass, *host, *port, *database)
-	conn, err := dbr.Open("postgres", connectStr, nil)
+	p := loader.NewParam(*user, *pass, *host, *port, *database)
+	l, err := loader.NewLoader(*dbtype, p)
 	if err != nil {
 		errHandle(err)
 	}
 
-	sess := conn.NewSession(nil)
-	l, err := loader.NewLoader(loader.TypePostgres)
-	if err != nil {
-		errHandle(err)
-	}
-
-	tables, err := l.Load(sess)
+	tables, err := loader.Load(l)
 	if err != nil {
 		errHandle(err)
 	}

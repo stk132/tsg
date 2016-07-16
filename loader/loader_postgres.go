@@ -1,8 +1,11 @@
 package loader
 
 import (
+	"fmt"
+
 	"github.com/gocraft/dbr"
-	"github.com/stk132/tsg/model"
+	//blank import for postgresql driver
+	_ "github.com/lib/pq"
 )
 
 const pgTableQuery = `
@@ -30,33 +33,25 @@ ORDER BY a.attnum
 
 //PgLoader Loader implements for Postgres
 type PgLoader struct {
+	sess dbr.SessionRunner
 }
 
-//Load load schema data
-func (p *PgLoader) Load(sess dbr.SessionRunner) ([]*model.Table, error) {
-	tableNames, err := p.TableNames(sess)
+//NewPgLoader constructor for PgLoader
+func NewPgLoader(p *Param) (*PgLoader, error) {
+	connectStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", p.user, p.pass, p.host, p.port, p.database)
+	conn, err := dbr.Open("postgres", connectStr, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	elements := make([]*model.Elem, len(tableNames))
-	for i, v := range tableNames {
-		columnNames, err := p.ColumnNames(sess, v)
-		if err != nil {
-			return nil, err
-		}
-		elements[i] = &model.Elem{
-			TableName:   v,
-			ColumnNames: columnNames,
-		}
-	}
-	return model.NewTables(elements), nil
+	sess := conn.NewSession(nil)
+	return &PgLoader{sess}, nil
 }
 
 //TableNames get table name list
-func (p *PgLoader) TableNames(sess dbr.SessionRunner) ([]string, error) {
+func (p *PgLoader) TableNames() ([]string, error) {
 	var ret []string
-	_, err := sess.SelectBySql(pgTableQuery).Load(&ret)
+	_, err := p.sess.SelectBySql(pgTableQuery).Load(&ret)
 	if err != nil {
 		return nil, err
 	}
@@ -64,9 +59,9 @@ func (p *PgLoader) TableNames(sess dbr.SessionRunner) ([]string, error) {
 }
 
 //ColumnNames get column name list
-func (p *PgLoader) ColumnNames(sess dbr.SessionRunner, tableName string) ([]string, error) {
+func (p *PgLoader) ColumnNames(tableName string) ([]string, error) {
 	var ret []string
-	_, err := sess.SelectBySql(pgColumnQuery, tableName).Load(&ret)
+	_, err := p.sess.SelectBySql(pgColumnQuery, tableName).Load(&ret)
 	if err != nil {
 		return nil, err
 	}

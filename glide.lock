@@ -1,5 +1,5 @@
-hash: cb01a961447028a95c2945914a0fe468fba266e39ba2cf64bced8387d3979f75
-updated: 2016-07-09T20:48:14.164704395+09:00
+hash: 3af5749f0b3fb2d2630316e780ac567c0455a67d1fa1221388c46a73bcab39e1
+updated: 2016-07-16T08:10:38.111190158+09:00
 imports:
 - name: github.com/alecthomas/template
   version: a0175ee3bccc567396460bf5acd36800cb10c49c
@@ -7,8 +7,10 @@ imports:
   - parse
 - name: github.com/alecthomas/units
   version: 2efee857e7cfd4f3d0138cc3cbb1b4966962b93a
+- name: github.com/go-sql-driver/mysql
+  version: 3654d25ec346ee8ce71a68431025458d52a38ac0
 - name: github.com/gocraft/dbr
-  version: 78b5b74da0b8bcbe167cc4c55d3383b6893848c3
+  version: 516ee9acfef4b1a281674c03cce642090e9cf852
   subpackages:
   - dialect
 - name: github.com/lib/pq
@@ -18,7 +20,7 @@ imports:
 - name: github.com/serenize/snaker
   version: 8824b61eca66d308fcb2d515287d3d7a28dba8d6
 - name: gopkg.in/alecthomas/kingpin.v2
-  version: 8cccfa8eb2e3183254457fb1749b2667fbc364c7
+  version: 92b2733684bc5f1971162349ce098fe0d070e2a9
 - name: gopkg.in/flosch/pongo2.v3
   version: 5e81b817a0c48c1c57cdf1a9056cf76bdee02ca9
 devImports: []

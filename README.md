@@ -84,7 +84,7 @@ func (t Users) A(aliasName string) Users {
 so, using with query builder like below (using dbr)
 
 ``` go
-dbr.Select(VUsers.Name.N()).From(VUsers.N()).Load(&m)
+sess.Select(VUsers.Name.N()).From(VUsers.N()).Load(&m)
 ```
 
 
@@ -101,6 +101,7 @@ Flags:
   -h, --host="localhost"     database host
   -p, --port="5432"          database port
   -d, --database=DATABASE    database name
+      --dbtype="Postgres"    database type
       --output-dir="."       generate file output dir
       --output-filename="const_tables.go"
                              generated filename
@@ -110,4 +111,5 @@ Flags:
 
 ## Supported RDB
 
-postgresql only now...
+- postgresql (dbtype: Postgres)
+- mysql (dbtype: MySQL)
