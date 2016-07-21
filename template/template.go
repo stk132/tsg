@@ -22,6 +22,7 @@ import "fmt"
 
 var (
   {% for table in tables %}
+	//V{{table.Capital}} global variable for getting table, column name
   V{{table.Capital}} {{table.Capital}}
   {% endfor %}
 )
@@ -37,16 +38,23 @@ func init() {
   {% endfor %}
 }
 
+//Column struct that represents table column
 type Column struct {
   name string
 }
 
+//N return column name
 func (c Column) N() string {
   return c.name
 }
 
-{% for table in tables %}
+//As return aliasName like "columnName AS aliasName"
+func (c Column) As(aliasName string) string {
+	return fmt.Sprintf("%s AS %s", c.N(), aliasName)
+}
 
+{% for table in tables %}
+//{{table.Capital}} struct that represents table "{{table.Original}}"
 type {{table.Capital}} struct {
   original string
   {% for column in table.Columns %}
@@ -54,10 +62,12 @@ type {{table.Capital}} struct {
   {% endfor %}
 }
 
+//N return table name
 func (t {{table.Capital}} ) N() string {
   return t.original
 }
 
+//A return struct that has aliasName specified
 func (t {{table.Capital}}) A(aliasName string) {{table.Capital}} {
   return {{table.Capital}}{
     original: aliasName,
