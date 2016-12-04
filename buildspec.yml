@@ -1,0 +1,15 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - go get github.com/Masterminds/glide
+  pre_build:
+    commands:
+      - glide install
+  build:
+    commands:
+      - go build
+  post_build:
+    commands:
+      - env
