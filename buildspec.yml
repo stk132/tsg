@@ -13,3 +13,4 @@ phases:
   post_build:
     commands:
       - env
+      - ls -al vendor
