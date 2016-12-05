@@ -11,7 +11,7 @@ phases:
       - mv * $GOPATH/src/github/stk132/tsg/.
   build:
     commands:
-      - cd $GOPATH/src/github/stk132/tsg && go build
+      - cd $GOPATH/src/github/stk132/tsg && pwd && go build
   post_build:
     commands:
       - env
