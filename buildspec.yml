@@ -7,9 +7,11 @@ phases:
   pre_build:
     commands:
       - glide install
+      - mkdir -p $GOPATH/src/github/stk132/tsg
+      - mv * $GOPATH/src/github/stk132/tsg/.
   build:
     commands:
-      - go build
+      - cd $GOPATH/src/github/stk132/tsg && go build
   post_build:
     commands:
       - env
